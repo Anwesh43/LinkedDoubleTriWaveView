@@ -26,4 +26,36 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + (scaleFactor()) * b.inverse()
-fun Float.updateScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap 
+fun Float.updateScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawDTWNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    val xGap : Float = (2 * size) / lines
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(gap * (i + 1), h/2)
+    rotate(90f * sc2)
+    translate(-size, 0f)
+    for (j in 0..(lines - 1)) {
+        val sc : Float = sc1.divideScale(j, lines)
+        save()
+        translate(xGap * j, 0f)
+        for (k in 0..1) {
+            val sk : Float = 1f - 2 * k
+            val oy : Float = xGap * sk
+            val dy : Float = -xGap * sk
+            val sck : Float = sc.divideScale(k, 2)
+            val y : Float = oy + (dy - oy) * sck
+            drawLine(xGap * j, oy, xGap * j + xGap * (1 - k) * sck, y, paint)
+        }
+        restore()
+    }
+    restore()
+}
