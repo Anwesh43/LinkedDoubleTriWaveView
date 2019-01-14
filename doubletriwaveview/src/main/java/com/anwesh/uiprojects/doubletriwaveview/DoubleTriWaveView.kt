@@ -214,4 +214,13 @@ class DoubleTriWaveView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : DoubleTriWaveView {
+            val view : DoubleTriWaveView = DoubleTriWaveView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
