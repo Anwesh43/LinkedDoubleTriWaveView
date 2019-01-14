@@ -43,6 +43,7 @@ fun Canvas.drawDTWNode(i : Int, scale : Float, paint : Paint) {
     translate(gap * (i + 1), h/2)
     rotate(90f * sc2)
     translate(-size, 0f)
+    drawLine(0f, xGap, 2 * size * sc1, xGap, paint)
     for (j in 0..(lines - 1)) {
         val sc : Float = sc1.divideScale(j, lines)
         save()
@@ -53,7 +54,7 @@ fun Canvas.drawDTWNode(i : Int, scale : Float, paint : Paint) {
             val dy : Float = -xGap * sk
             val sck : Float = sc.divideScale(k, 2)
             val y : Float = oy + (dy - oy) * sck
-            drawLine(xGap * j, oy, xGap * j + xGap * (1 - k) * sck, y, paint)
+            drawLine(xGap * k, oy, xGap * k + xGap * (1 - k) * sck, y, paint)
         }
         restore()
     }
@@ -220,7 +221,7 @@ class DoubleTriWaveView(ctx : Context) : View(ctx) {
         fun create(activity : Activity) : DoubleTriWaveView {
             val view : DoubleTriWaveView = DoubleTriWaveView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
     }
 }
