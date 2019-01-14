@@ -192,4 +192,25 @@ class DoubleTriWaveView(ctx : Context) : View(ctx) {
         }
     }
 
+    data class Renderer(var view : DoubleTriWaveView) {
+
+        private val dtw : DoubleTriWave = DoubleTriWave(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            dtw.draw(canvas, paint)
+            animator.animate {
+                dtw.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            dtw.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
